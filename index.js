@@ -1,6 +1,20 @@
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const { Coinbase, Wallet } = require("@coinbase/coinbase-sdk");
+const express = require('express');
 
+// Keep Render free web service alive with a simple HTTP server
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Apex Wallet Bot is active and running!');
+});
+
+app.listen(PORT, () => {
+    console.log(`HTTP server listening on port ${PORT}`);
+});
+
+// Configure Coinbase SDK securely via environment variables
 Coinbase.configure({
     apiKeyName: process.env.CDP_API_KEY_NAME,
     privateKey: process.env.CDP_PRIVATE_KEY
