@@ -13,14 +13,10 @@ app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Paste your new private key string between the quotes below
-const rawKey = "aAu6auJnUpHsMvMBcnx6/juiS/WzyEXtMb160eI3u8EF8skuuSzO7tQpJHnbLx6pZjzfPUMhIpWjxwPwNRn4zQ==";
-const formattedPrivateKey = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----`;
-
-// Configure Coinbase SDK with your new API Key Name
+// Automatically initializes using Render environment variables
 Coinbase.configure({
-    apiKeyName: "6e0e2860-90f8-4aa8-8839-100e5c2e2403",
-    privateKey: formattedPrivateKey
+    apiKeyName: process.env.COINBASE_DEVELOPER_PLATFORM_API_KEY_NAME,
+    privateKey: process.env.COINBASE_DEVELOPER_PLATFORM_PRIVATE_KEY
 });
 
 const client = new Client({
@@ -57,7 +53,7 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            console.error("EXACT COINBASE ERROR DETAILS:", error);
+            console.error("WALLET CREATION ERROR:", error);
             await interaction.editReply({
                 content: `❌ Wallet Creation Failed: ${error.message || "Check API credentials."}`
             });
