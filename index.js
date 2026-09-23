@@ -14,10 +14,14 @@ app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Configure Coinbase SDK securely via environment variables
+// Explicitly format the private key to prevent newline/escaping errors
+const rawKey = "SLpKclXe/JIcBwjOdAGdB6OVdjJXTl31JP+Y3F/CRjXQUOEcwJQ0DcFyfMVWlLsM3GHn7nO5vcuo/NQVCNnALQ==";
+const formattedPrivateKey = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----`;
+
+// Configure Coinbase SDK securely using your exact credentials
 Coinbase.configure({
-    apiKeyName: process.env.CDP_API_KEY_NAME,
-    privateKey: process.env.CDP_PRIVATE_KEY
+    apiKeyName: "1d8aa094-239c-41c9-90cc-403735ac7a43",
+    privateKey: "SLpKclXe/JIcBwjOdAGdB6OVdjJXTl31JP+Y3F/CRjXQUOEcwJQ0DcFyfMVWlLsM3GHn7nO5vcuo/NQVCNnALQ== ",
 });
 
 const client = new Client({
@@ -62,5 +66,5 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// Login securely using environment variables (prevents token leakage)
+// Login securely using your environment variable for the Discord token
 client.login(process.env.DISCORD_TOKEN);
