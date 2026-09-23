@@ -13,11 +13,13 @@ app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Automatically initializes using Render environment variables
-Coinbase.configure({
-    apiKeyName: process.env.COINBASE_DEVELOPER_PLATFORM_API_KEY_NAME,
-    privateKey: process.env.COINBASE_DEVELOPER_PLATFORM_PRIVATE_KEY
-});
+// Automatically configure using the uploaded JSON key file
+try {
+    Coinbase.configureFromJson({ filePath: "./cdp_api_key.json" });
+    console.log("Coinbase SDK configured successfully via JSON file.");
+} catch (error) {
+    console.error("Failed to configure Coinbase SDK:", error.message);
+}
 
 const client = new Client({
     intents: [
