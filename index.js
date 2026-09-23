@@ -64,9 +64,9 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            console.error("Wallet creation error:", error);
+            console.error("DETAILED COINBASE ERROR:", error.response?.data || error.message);
             await interaction.editReply({
-                content: "❌ Failed to provision real wallet. Check server network connectivity or API configuration keys."
+                content: `❌ Coinbase Error: ${error.message}`
             });
         }
     }
