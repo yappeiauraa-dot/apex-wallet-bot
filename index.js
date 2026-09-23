@@ -1,7 +1,6 @@
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const { Coinbase, Wallet } = require("@coinbase/coinbase-sdk");
 const express = require('express');
-const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,13 +13,13 @@ app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Explicitly format your private key with proper headers and line breaks
-const rawKey = "SLpKclXe/JIcBwjOdAGdB6OVdjJXTl31JP+Y3F/CRjXQUOEcwJQ0DcFyfMVWlLsM3GHn7nO5vcuo/NQVCNnALQ==";
+// Explicitly format your private key
+const rawKey = "aAu6auJnUpHsMvMBcnx6/juiS/WzyEXtMb160eI3u8EF8skuuSzO7tQpJHnbLx6pZjzfPUMhIpWjxwPwNRn4zQ==;
 const formattedPrivateKey = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----`;
 
-// Initialize the Coinbase SDK with your CDP credentials
+// Configure Coinbase SDK
 Coinbase.configure({
-    apiKeyName: "1d8aa094-239c-41c9-90cc-403735ac7a43",
+    apiKeyName: "6e0e2860-90f8-4aa8-8839-100e5c2e2403",
     privateKey: formattedPrivateKey
 });
 
@@ -33,7 +32,7 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}! Coinbase SDK active.`);
+    console.log(`Logged in as ${client.user.tag}! Bot ready.`);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -43,7 +42,6 @@ client.on('interactionCreate', async interaction => {
         await interaction.deferReply({ ephemeral: true });
 
         try {
-            // Provision a new wallet on Base Sepolia testnet
             const wallet = await Wallet.create({ networkId: 'base-sepolia' });
             const address = await wallet.getDefaultAddress();
             const addressId = await address.getId();
@@ -59,9 +57,9 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            console.error("WALLET CREATION ERROR:", error);
+            console.error("EXACT COINBASE ERROR DETAILS:", error);
             await interaction.editReply({
-                content: `❌ Wallet Creation Failed: ${error.message || "Check API credentials or permissions."}`
+                content: `❌ Wallet Creation Failed. Check Render logs for the full Coinbase error response.`
             });
         }
     }
