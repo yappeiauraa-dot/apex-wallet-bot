@@ -62,4 +62,5 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login("MTU1MjAxNTc2OTExNjg2ODY1OA.GLio9z.Wqt9VMBuqC-hDpjstFKIUsO8KCN0qYC0cDENQU");
+// Login securely using environment variables (prevents token leakage)
+client.login(process.env.DISCORD_TOKEN);
