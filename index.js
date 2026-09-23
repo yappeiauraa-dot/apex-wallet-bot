@@ -15,8 +15,8 @@ app.listen(PORT, () => {
 
 // Directly configure using the parameters from your downloaded JSON file
 Coinbase.configure({
-    apiKeyName: "8a2dc84f-ca63-4229-afb0-f06fb82fb1b8", // e.g., the UUID string
-    privateKey: "f+fIaqwymb3bIo/Xkb+qFwx1z9qn2Tpckd4M4Xe9PdDzDuSezZlBVLyQ2PUg+1Yp657YHXjYdgfFghNwz6LW+A==" // e.g., the long Ed25519 string block
+    apiKeyName: "1775f845-73eb-4963-a8d5-a4f91448fceb", // e.g., the UUID string
+    privateKey: "fuLZwvtu5N86cNNhyVcf6pCrmAEQquDb211HQADu/T+eevxz/O0omva+z58sLkVejM3zd8Zr1llbznZ+nIzTMA==" // e.g., the long Ed25519 string block
 });
 
 const client = new Client({
