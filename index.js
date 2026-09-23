@@ -1,9 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
-const { Coinbase, Wallet } = require("@coinbase/coinbase-sdk");
 const express = require('express');
 const axios = require('axios');
 
-// Keep Render free web service alive with a simple HTTP server
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -20,16 +18,6 @@ axios.get('https://api.ipify.org?format=json')
     .then(res => console.log("🌐 Outbound network test SUCCESS. Server IP:", res.data.ip))
     .catch(err => console.log("❌ Outbound network test BLOCKED or FAILED:", err.message));
 
-// Explicitly format the private key with proper newline characters
-const rawKey = "SLpKclXe/JIcBwjOdAGdB6OVdjJXTl31JP+Y3F/CRjXQUOEcwJQ0DcFyfMVWlLsM3GHn7nO5vcuo/NQVCNnALQ==";
-const formattedPrivateKey = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----`;
-
-// Configure Coinbase SDK using the formatted variable
-Coinbase.configure({
-    apiKeyName: "1d8aa094-239c-41c9-90cc-403735ac7a43",
-    privateKey: formattedPrivateKey
-});
-
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -39,7 +27,7 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-    console.log(`Logged in as ${client.user.tag}! Real Web3 client active.`);
+    console.log(`Logged in as ${client.user.tag}! Direct REST client active.`);
 });
 
 client.on('interactionCreate', async interaction => {
@@ -49,24 +37,29 @@ client.on('interactionCreate', async interaction => {
         await interaction.deferReply({ ephemeral: true });
 
         try {
-            const wallet = await Wallet.create();
-            const address = await wallet.getDefaultAddress();
-            const addressId = await address.getId();
+            // Testing raw endpoint reachability to Coinbase API domain
+            const response = await axios.get('https://api.developer.coinbase.com/portal/v1/health', {
+                validateStatus: function (status) {
+                    return status < 500; // Resolve even if 401/403 unauthorized, proving endpoint is reachable
+                }
+            });
+
+            console.log("Coinbase API Health Reachability Status:", response.status);
 
             const embed = new EmbedBuilder()
-                .setTitle("🪙 Apex Wallet Created")
-                .setDescription("Your official on-chain Web3 wallet has been successfully provisioned on Coinbase Developer Platform.")
+                .setTitle("🪙 Apex Wallet Endpoint Check")
+                .setDescription("Successfully reached Coinbase Developer Platform infrastructure.")
                 .addFields(
-                    { name: "Wallet Address", value: `\`${addressId}\`` },
-                    { name: "Network", value: "Base Sepolia / Polygon (Managed)" }
+                    { name: "API Status Code", value: `\`${response.status}\`` },
+                    { name: "Network Status", value: "Connected" }
                 )
                 .setColor(0x00FF00);
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            console.error("RAW COINBASE ERROR OBJECT:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
+            console.error("DIRECT API ERROR:", error.message);
             await interaction.editReply({
-                content: `❌ Coinbase Error: ${error?.message || error?.toString() || "Unknown error occurred"}`
+                content: `❌ Connection Error: ${error.message}`
             });
         }
     }
