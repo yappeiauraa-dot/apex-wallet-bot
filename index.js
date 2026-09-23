@@ -13,13 +13,11 @@ app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
 
-// Automatically configure using the uploaded JSON key file
-try {
-    Coinbase.configureFromJson({ filePath: "./cdp_api_key.json" });
-    console.log("Coinbase SDK configured successfully via JSON file.");
-} catch (error) {
-    console.error("Failed to configure Coinbase SDK:", error.message);
-}
+// Directly configure using the parameters from your downloaded JSON file
+Coinbase.configure({
+    apiKeyName: "8a2dc84f-ca63-4229-afb0-f06fb82fb1b8", // e.g., the UUID string
+    privateKey: "f+fIaqwymb3bIo/Xkb+qFwx1z9qn2Tpckd4M4Xe9PdDzDuSezZlBVLyQ2PUg+1Yp657YHXjYdgfFghNwz6LW+A==" // e.g., the long Ed25519 string block
+});
 
 const client = new Client({
     intents: [
