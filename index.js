@@ -64,9 +64,9 @@ client.on('interactionCreate', async interaction => {
 
             await interaction.editReply({ embeds: [embed] });
         } catch (error) {
-            console.error("DETAILED COINBASE ERROR:", error.response?.data || error.message);
+            console.error("RAW COINBASE ERROR OBJECT:", JSON.stringify(error, Object.getOwnPropertyNames(error)));
             await interaction.editReply({
-                content: `❌ Coinbase Error: ${error.message}`
+                content: `❌ Coinbase Error: ${error?.message || error?.toString() || "Unknown error occurred"}`
             });
         }
     }
