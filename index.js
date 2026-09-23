@@ -1,6 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const { Coinbase, Wallet } = require("@coinbase/coinbase-sdk");
 const express = require('express');
+const axios = require('axios');
 
 // Keep Render free web service alive with a simple HTTP server
 const app = express();
@@ -13,6 +14,11 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`HTTP server listening on port ${PORT}`);
 });
+
+// Test outbound network connectivity on startup
+axios.get('https://api.ipify.org?format=json')
+    .then(res => console.log("🌐 Outbound network test SUCCESS. Server IP:", res.data.ip))
+    .catch(err => console.log("❌ Outbound network test BLOCKED or FAILED:", err.message));
 
 // Explicitly format the private key with proper newline characters
 const rawKey = "SLpKclXe/JIcBwjOdAGdB6OVdjJXTl31JP+Y3F/CRjXQUOEcwJQ0DcFyfMVWlLsM3GHn7nO5vcuo/NQVCNnALQ==";
